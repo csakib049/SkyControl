@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drone Control</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="top-bar">
+      <div id="connection-panel">
+        <span id="status-backend" class="status-dot disconnected"></span>
+        <span id="status-label">Disconnected</span>
+        <button id="btn-reconnect">Reconnect</button>
+      </div>
+      <div id="title-bar">
+        <h1>Drone Control</h1>
+      </div>
+      <div id="arming-panel">
+        <label class="arm-toggle">
+          <input type="checkbox" id="arm-checkbox">
+          <span class="arm-slider"></span>
+          <span id="arm-label">ARM</span>
+        </label>
+      </div>
+    </header>
+
+    <div id="main-layout">
+      <div id="video-section">
+        <div id="video-container">
+          <img id="video-feed" src="" alt="drone video feed">
+          <div id="video-overlay">
+            <span id="overlay-video-status">No Video</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="telemetry-panel">
+        <h3>Telemetry</h3>
+        <div class="telem-row">
+          <span class="telem-label">Battery</span>
+          <span id="telem-battery" class="telem-value">0%</span>
+        </div>
+        <div class="telem-row">
+          <span class="telem-label">State</span>
+          <span id="telem-state" class="telem-value">--</span>
+        </div>
+        <div class="telem-row">
+          <span class="telem-label">Altitude</span>
+          <span id="telem-altitude" class="telem-value">0 cm</span>
+        </div>
+        <div class="telem-row">
+          <span class="telem-label">Pitch</span>
+          <span id="telem-pitch" class="telem-value">0.0°</span>
+        </div>
+        <div class="telem-row">
+          <span class="telem-label">Roll</span>
+          <span id="telem-roll" class="telem-value">0.0°</span>
+        </div>
+        <div class="telem-row">
+          <span class="telem-label">Yaw</span>
+          <span id="telem-yaw" class="telem-value">0.0°</span>
+        </div>
+        <div class="telem-row">
+          <span class="telem-label">Speed</span>
+          <span id="telem-speed" class="telem-value">0 m/s</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="controls-section">
+      <div class="joystick-wrapper">
+        <div class="joystick-label">YAW / GAZ</div>
+        <div id="joystick-left" class="joystick">
+          <div class="joystick-knob" id="knob-left"></div>
+        </div>
+      </div>
+
+      <div id="action-buttons">
+        <button id="btn-takeoff" class="action-btn takeoff-btn">TAKEOFF</button>
+        <button id="btn-land" class="action-btn land-btn">LAND</button>
+        <button id="btn-flattrim" class="action-btn flattrim-btn">CALIBRATE</button>
+        <button id="btn-hover" class="action-btn hover-btn">HOVER</button>
+      </div>
+
+      <div class="joystick-wrapper">
+        <div class="joystick-label">PITCH / ROLL</div>
+        <div id="joystick-right" class="joystick">
+          <div class="joystick-knob" id="knob-right"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="emergency-bar">
+      <button id="btn-emergency">EMERGENCY STOP</button>
+    </div>
+
+    <div id="connection-warning" class="hidden">
+      WARNING: Connection lost while airborne! Drone failsafe should engage.
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+Drone web app server running on http://0.0.0.0:3000
+Drone IP: 192.168.1.1:5556
