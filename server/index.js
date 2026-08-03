@@ -57,13 +57,17 @@ app.post('/api/config', (req, res) => {
 app.get('/api/video.mjpg', (req, res) => {
   if (!video.isActive()) {
     video.start(`tcp://${config.drone.ip}:${config.drone.videoPort}`);
-    setTimeout(() => {
+    return setTimeout(() => {
       if (!video.isActive()) {
         return res.status(503).json({ error: 'video stream unavailable' });
       }
+      startMjpegStream(req, res);
     }, 2000);
   }
+  startMjpegStream(req, res);
+});
 
+function startMjpegStream(req, res) {
   res.writeHead(200, {
     'Content-Type': 'multipart/x-mixed-replace; boundary=--droneframe',
     'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -107,7 +111,7 @@ app.get('/api/video.mjpg', (req, res) => {
   req.on('close', () => {
     stream.removeListener('data', onData);
   });
-});
+}
 
 wss.on('connection', (ws) => {
   ws.send(JSON.stringify({ type: 'status', connected: drone.connected }));

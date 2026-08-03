@@ -289,8 +289,55 @@ document.addEventListener('DOMContentLoaded', () => {
     connect();
   });
 
-  connect();
+  /* Hero connect button */
+  document.getElementById('btn-connect').addEventListener('click', enterApp);
+
+  /* Back button */
+  document.getElementById('btn-back').addEventListener('click', goBack);
+
+  checkServerStatus();
 });
+
+function checkServerStatus() {
+  const dot = document.getElementById('hero-status-dot');
+  const text = document.getElementById('hero-status-text');
+
+  fetch('/api/status')
+    .then((res) => res.json())
+    .then(() => {
+      dot.className = 'hero-status-dot online';
+      text.textContent = 'Server online';
+    })
+    .catch(() => {
+      dot.className = 'hero-status-dot offline';
+      text.textContent = 'Server offline';
+    });
+}
+
+function enterApp() {
+  const hero = document.getElementById('hero');
+  hero.classList.add('hero-hidden');
+
+  if (connected) {
+    startVideo();
+    startJoystickPolling();
+  } else {
+    connect();
+  }
+}
+
+function goBack() {
+  if (isFlying) {
+    const ok = window.confirm('Drone is airborne. Return to home screen?');
+    if (!ok) return;
+  }
+
+  const hero = document.getElementById('hero');
+  hero.classList.remove('hero-hidden');
+
+  stopJoystickPolling();
+  sendToServer({ type: 'hover' });
+}
 
 function handleTakeoffLand() {
   if (!armed) return;
