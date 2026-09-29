@@ -1,0 +1,4 @@
+Drone web app server running
+Open in your browser: http://localhost:3000
+Listening on 0.0.0.0:3000 (bind address, not a browser URL)
+Drone IP: 192.168.1.1:5556

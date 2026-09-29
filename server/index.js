@@ -176,8 +176,38 @@ wss.on('connection', (ws) => {
 
 drone.connect();
 
+const serverErrorHandler = (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(
+      `\nPort ${config.server.port} is already in use.`
+    );
+    console.error(
+      'Another copy of this server is most likely still running.'
+    );
+    console.error('Find and stop it, then try again:');
+    console.error(
+      `  netstat -ano | findstr :${config.server.port}`
+    );
+    console.error('  taskkill /PID <pid> /F');
+  } else {
+    console.error(err);
+  }
+  drone.disconnectFromDrone();
+  video.stop();
+  process.exit(1);
+};
+
+server.on('error', serverErrorHandler);
+wss.on('error', (err) => {
+  if (err.code !== 'EADDRINUSE') {
+    console.error(err);
+  }
+});
+
 server.listen(config.server.port, config.server.host, () => {
-  console.log(`Drone web app server running on http://${config.server.host}:${config.server.port}`);
+  console.log(`Drone web app server running`);
+  console.log(`Open in your browser: http://localhost:${config.server.port}`);
+  console.log(`Listening on ${config.server.host}:${config.server.port} (bind address, not a browser URL)`);
   console.log(`Drone IP: ${config.drone.ip}:${config.drone.commandPort}`);
 });
 
