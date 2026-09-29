@@ -1,143 +1,206 @@
-# Wi-Fi Drone Control Web App
+# SkyControl - Wi-Fi Drone Control Web App
 
-Control a Parrot-style Wi-Fi drone (AR.Drone / Bebop-class) straight from your web browser. Everything runs on your laptop — no internet, no cloud, no accounts.
+Control a Parrot AR.Drone 2.0 (or compatible Wi-Fi drone) directly from your web browser.
+Everything runs locally on your laptop - no internet, no cloud, no accounts required.
 
-## What you need
+## What You'll Need
 
-- Node.js 18 or newer (download from nodejs.org)
-- npm (comes with Node.js)
-- ffmpeg (only if you want the live video feed)
-- A Parrot-style Wi-Fi drone
+| Requirement | Notes |
+|---|---|
+| **Node.js 18+** | Download from [nodejs.org](https://nodejs.org). Comes with npm. |
+| **npm** | Automatically installed with Node.js. |
+| **ffmpeg** (optional) | Only needed for the live video feed. Not required to control the drone. |
+| **A Parrot-style drone** | AR.Drone 2.0 works out of the box. Connect your laptop to the drone's Wi-Fi. |
 
 ---
 
-## Step 1: Run the project (first time only)
+## Step 1: Download or Clone the Project
 
-Open a terminal (PowerShell) inside the project folder and install the dependencies:
+If you have the project folder already (e.g., `C:\sakib\SkyControl`), skip to Step 2.
+
+To clone from a repository:
 
 ```bash
-cd D:\SkyControl
+git clone <repo-url>
+cd SkyControl
+```
+
+Or download the ZIP and extract it to a folder, e.g., `C:\sakib\SkyControl`.
+
+---
+
+## Step 2: Install Dependencies
+
+Open **PowerShell** and navigate to the project folder:
+
+```powershell
+cd C:\sakib\SkyControl
+```
+
+Install the required packages (express and ws):
+
+```powershell
 npm install
 ```
 
-You only do this once.
+This installs dependencies into the `node_modules` folder. You only need to do this once.
 
 ---
 
-## Step 2: Start the server (every time you use it)
+## Step 3: Start the Server
 
-```bash
+From the project folder, run:
+
+```powershell
 npm start
 ```
 
-You should see:
+You should see this in the terminal:
 
 ```
 Drone web app server running on http://0.0.0.0:3000
+Drone IP: 192.168.1.1:5556
 ```
 
-Keep this terminal window open. Now open your browser and go to:
+Leave this terminal window open. The server is now running.
+
+---
+
+## Step 4: Open in Browser
+
+Open any browser (Chrome, Edge, Firefox) and go to:
 
 ```
 http://localhost:3000
 ```
 
----
-
-## Step 3: Connect your drone
-
-1. **Turn on your drone.** It starts its own Wi-Fi network (for example, AR.Drone 2.0 shows up as `ardrone2_xxx`).
-2. **Connect your laptop to the drone's Wi-Fi** — just like connecting to any normal Wi-Fi network. This is a local connection, no internet needed.
-3. **Back in the browser**, you'll see a welcome screen. Check the top-right shows **"Server online"** (green dot).
-4. Click the big **CONNECT TO DRONE** button. The control screen opens.
+You will see the SkyControl welcome screen with a radar animation and a **CONNECT TO DRONE** button.
 
 ---
 
-## Step 4: How to fly
+## Step 5: Connect to Your Drone
 
-1. Switch on the **ARM** toggle (top-right). Takeoff won't work without it.
-2. Press **TAKEOFF** (green button).
-3. Fly with the joysticks or keyboard (see below).
-4. Press **LAND** to come down, or the big red **EMERGENCY STOP** to cut the motors instantly.
+1. **Power on your drone.** It creates its own Wi-Fi network (e.g., `ardrone2_xxx`).
+2. **On your laptop, connect to the drone's Wi-Fi** - just like connecting to any normal Wi-Fi network. No internet is needed.
+3. **Back in the browser**, check the top-right corner shows **"Server online"** (green dot).
+4. Click the big **CONNECT TO DRONE** button. The control panel opens with the joystick controls.
 
 ---
 
-## Controls
+## Step 6: Fly the Drone
+
+1. **Toggle ARM ON** in the top-right of the control panel. The label will turn green and say `ARMED`.
+2. Press **TAKEOFF** (green button). The drone will leave the ground.
+3. Control it using:
+   - **Joysticks** (mouse/touch) - see layout below.
+   - **Keyboard** - see table below.
+4. Press **LAND** to land gently, or hit **EMERGENCY STOP** to cut motors instantly.
+
+---
+
+## Controls Guide
 
 ### Joysticks (mouse or touch)
 
-- **Left joystick**: up/down = altitude (gaz), left/right = rotate (yaw)
-- **Right joystick**: up/down = forward/back (pitch), left/right = strafe (roll)
-- Let go of a joystick and it snaps back to center = hover
+| Joystick | Action |
+|---|---|
+| **Left** | Up/Down = altitude (gaz), Left/Right = rotate (yaw) |
+| **Right** | Up/Down = forward/backward (pitch), Left/Right = strafe (roll) |
+| Release | Knob snaps back to center = hover in place |
 
 ### Keyboard
 
-| Key    | Action                |
-|--------|------------------------|
-| W / S  | Forward / backward    |
-| A / D  | Left / right          |
-| Q / E  | Rotate left / right   |
-| R / F  | Fly up / down         |
-| Space  | Takeoff / land toggle |
+| Key | Action |
+|---|---|
+| W / S | Forward / backward |
+| A / D | Strafe left / right (roll) |
+| Q / E | Rotate left / right (yaw) |
+| R / F | Ascend / descend (gaz) |
+| Space | Takeoff / land toggle |
+| **E-STOP** | Always at bottom - works instantly, no arm check needed |
 
 ---
 
-## Connection details (if your drone doesn't connect)
+## Optional: Configure Drone Settings
 
-The app assumes an **AR.Drone 2.0** with these default settings:
+If your drone uses different IPs or ports, edit `server/config.js`:
 
-| Setting      | Default       |
-|--------------|---------------|
-| Drone IP     | `192.168.1.1` |
-| Command port | `5556` (UDP)  |
-| Telemetry    | `5554` (UDP)  |
-| Video        | `5555` (TCP)  |
-
-If your drone uses different values, open `server/config.js` and change them:
-
-```js
-drone: {
-  ip: '192.168.1.1',   // <-- change to your drone's IP
-  commandPort: 5556,
-  navdataPort: 5554,
-  videoPort: 5555,
-}
+```javascript
+module.exports = {
+  drone: {
+    ip: '192.168.1.1',        // Drone IP address
+    commandPort: 5556,         // UDP command port
+    navdataPort: 5554,         // UDP telemetry port
+    videoPort: 5555,           // TCP video port
+  },
+  server: {
+    port: 3000,                // Web server port
+    host: '0.0.0.0',           // Listen address
+  },
+  // ... other settings
+};
 ```
 
-Then restart the server (press `Ctrl+C`, run `npm start` again).
-
-### Other Parrot models
-
-- **AR.Drone 2.0** — works out of the box with the defaults above.
-- **Parrot Bebop 2** — uses a different protocol on port `54321`. You'd need to modify `server/droneClient.js`.
-- **Parrot Anafi** — uses a different protocol on port `44444`. Not compatible with this client.
-
-Check your drone's manual for its exact command port/protocol before changing the config.
+After editing, restart the server (`Ctrl+C`, then `npm start` again).
 
 ---
 
-## Project structure
+## Stopping the Server
+
+- Press **Ctrl+C** in the terminal window, then type `y` and press Enter to confirm.
+- The server will shut down safely, telling the drone to hover and land.
+
+---
+
+## Troubleshooting
+
+### "Server online" shows offline / CONNECT button doesn't work
+
+- Make sure `npm start` is running in the terminal.
+- Verify you can reach `http://localhost:3000` directly - if the page doesn't load, the server isn't running.
+- Try clicking the **RECONNECT** button in the control panel.
+
+### Drone won't take off
+
+- Make sure the **ARM** toggle is ON (top-right). TAKEOFF is disabled without arming.
+- Verify your laptop is connected to the drone's Wi-Fi, not your regular network.
+- Check the drone IP in `server/config.js` matches your drone's address (default `192.168.1.1`).
+
+### Live video feed shows "No Video"
+
+- You need **ffmpeg** installed and on your system PATH.
+- Install ffmpeg: https://ffmpeg.org/download.html
+- Restart the server after installing ffmpeg.
+
+### Joystick or keyboard controls feel unresponsive
+
+- Move the sliders/joysticks to center (hover) position. If a joystick is slightly off-center, the drone may drift.
+- Keyboard controls only work once the WebSocket connection is active (green "Connected" dot in the top-left).
+
+---
+
+## Project Structure
 
 ```
-D:\SkyControl\
-  server\
-    index.js         # Express + WebSocket server
-    droneClient.js   # UDP commands + telemetry + heartbeat
-    videoRelay.js    # ffmpeg video relay
-    config.js        # Drone IP / ports / settings
-  public\
-    index.html       # The web page
-    app.js           # Browser logic + controls
-    style.css        # Styling
-  package.json
-  README.md
+SkyControl/
+  server/
+    index.js          # Express + WebSocket server
+    droneClient.js    # UDP drone commands + telemetry parsing
+    videoRelay.js     # ffmpeg-based video relay (MJPEG)
+    config.js         # Drone IP, ports, protocol settings
+  public/
+    index.html        # Web page (hero screen + control panel)
+    app.js            # Browser logic (controls, joysticks, telemetry)
+    style.css         # Styling (dark tech theme)
+  package.json        # Project config + dependencies
+  README.md           # This file
 ```
 
 ---
 
-## Safety notes
+## Safety Notes
 
-- The **ARM** switch must be on before takeoff — prevents accidental launch.
-- The **EMERGENCY STOP** button is always at the bottom of the screen and works instantly, no matter what.
-- If the connection drops while the drone is in the air, a big red warning appears. The drone's own failsafe lands it automatically when it stops receiving commands.
-- If you press **← BACK** to the welcome screen while airborne, the app asks you first so the controls don't get hidden accidentally.
+- The **ARM** toggle must be ON before takeoff - prevents accidental launch.
+- The **EMERGENCY STOP** button at the bottom always works, even if not armed.
+- If the connection drops while flying, a red warning appears and the drone's own failsafe lands it automatically.
+- The **BACK** button asks for confirmation if the drone is airborne, so you don't lose the controls accidentally.
